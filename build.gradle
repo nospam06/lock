@@ -1,0 +1,44 @@
+group 'com.ohmyapp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: "com.google.code.gson", name: "gson", version: "2.7"
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'ch.qos.logback:logback-classic:1.1.7'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1"
+    }
+}
+apply plugin: "org.sonarqube"
+sonarqube {
+    properties {
+        property 'sonar.test.exclusions', '**/test/**/*'
+        property 'sonar.junit.reportsPath', 'build/test-results'
+    }
+}
+apply plugin: "jacoco"
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+}
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+checkstyle {
+    configFile = rootProject.file('google_checks.xml')
+    toolVersion = '6.19'
+    checkstyleTest.enabled = false
+}
